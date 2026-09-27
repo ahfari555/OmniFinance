@@ -1,60 +1,289 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OmniFinance - US Financial Calculators</title>
+  <title>OmniFinance - Advanced US Financial & Investment Suite</title>
+  
+  <meta name="description" content="100% free US personal finance tools. Calculate mortgage payments, simulate compound interest investments, plan debt payoff, and estimate emergency funds instantly.">
+  <meta name="keywords" content="mortgage calculator, compound interest calculator, debt payoff planner, emergency fund calculator, us finance tools">
   <meta name="google-site-verification" content="google45274bc7d9133ca5" />
+  
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2805918301542012" crossorigin="anonymous"></script>
+
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-  <style>body { font-family: 'Plus Jakarta Sans', sans-serif; }</style>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: { fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] } } }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: linear-gradient(135deg, #f0fdf4 0%, #f8fafc 50%, #eff6ff 100%); }
+    html.dark body { background: linear-gradient(135deg, #022c22 0%, #0f172a 50%, #1e1b4b 100%); color: #f8fafc; }
+    .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); border: 1px solid rgba(226, 232, 240, 0.8); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); }
+    html.dark .glass-card { background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5); }
+    .gradient-text { background: linear-gradient(135deg, #2563eb 0%, #059669 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between">
-  <header class="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center">
-    <div class="font-black text-xl text-blue-600">📈 OmniFinance</div>
-    <div class="text-xs font-semibold bg-blue-50 text-blue-600 px-3 py-1 rounded-full">US Financial Suite</div>
-  </header>
+<body class="min-h-screen flex flex-col antialiased text-slate-800 dark:text-slate-100">
 
-  <main class="max-w-4xl mx-auto px-6 py-12 flex-1 space-y-6">
-    <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
-      <h1 class="text-2xl md:text-3xl font-black text-slate-900">US Mortgage & Loan Payment Calculator</h1>
-      <p class="text-xs text-slate-500">Calculate your monthly mortgage or loan payments instantly.</p>
-      
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label class="text-xs font-bold text-slate-600 block mb-1">Loan Amount ($):</label>
-          <input type="number" id="loanAmt" value="350000" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs">
-        </div>
-        <div>
-          <label class="text-xs font-bold text-slate-600 block mb-1">Interest Rate (% APR):</label>
-          <input type="number" step="0.1" id="loanRate" value="6.5" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs">
-        </div>
+  <!-- NAVBAR -->
+  <header class="sticky top-0 z-50 bg-white/70 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-6 py-4">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-emerald-500 flex items-center justify-center font-black text-xl text-white shadow-md">📈</div>
+        <span class="text-xl font-extrabold tracking-tight">Omni<span class="gradient-text">Finance</span></span>
       </div>
-
-      <button onclick="calcLoan()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl text-xs transition">
-        Calculate Payment 📊
-      </button>
-
-      <div id="resultBox" class="hidden bg-slate-100 p-6 rounded-2xl text-center space-y-2">
-        <div class="text-xs font-bold uppercase text-slate-500">Estimated Monthly Payment</div>
-        <div id="resMonthly" class="text-3xl font-black text-blue-600">$0</div>
+      <div class="flex items-center gap-3">
+        <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> 100% Client-Side Privacy
+        </span>
+        <button onclick="toggleDarkMode()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-amber-400 hover:bg-slate-200 transition">
+          <span id="themeIcon">🌙</span>
+        </button>
       </div>
     </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="max-w-6xl mx-auto px-6 pt-12 pb-6 text-center">
+    <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950 px-3 py-1 rounded-full border border-emerald-100 dark:border-emerald-900 mb-3 inline-block">Advanced US Financial Calculators</span>
+    <h1 class="text-3xl md:text-5xl font-black tracking-tight mb-4">
+      Smart Mortgages, Investments & <span class="gradient-text">Debt Planners.</span>
+    </h1>
+    <p class="text-slate-500 dark:text-slate-400 text-sm md:text-base max-w-xl mx-auto font-medium">
+      Simulate loans, compound investment growth, and plan financial security instantly in your browser.
+    </p>
+  </section>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-4xl mx-auto px-6 py-6 flex-1 w-full space-y-6">
+
+    <!-- TABS -->
+    <div class="flex flex-wrap justify-center gap-2">
+      <button onclick="switchTab('mortgage')" id="btnMortgage" class="px-4 py-2 rounded-xl text-xs font-bold transition bg-blue-600 text-white shadow-md">🏠 Mortgage</button>
+      <button onclick="switchTab('invest')" id="btnInvest" class="px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-300">📈 Compound Interest</button>
+      <button onclick="switchTab('debt')" id="btnDebt" class="px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-300">💳 Debt Payoff</button>
+      <button onclick="switchTab('emergency')" id="btnEmergency" class="px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-300">🛡️ Emergency Fund</button>
+    </div>
+
+    <!-- TAB 1: MORTGAGE -->
+    <div id="contentMortgage" class="glass-card p-6 md:p-8 rounded-3xl space-y-6">
+      <div>
+        <h2 class="text-lg font-black mb-1">US Loan & Mortgage Calculator</h2>
+        <p class="text-xs text-slate-500 dark:text-slate-400">Calculate monthly principal and interest payments for home mortgages or personal loans.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="text-xs font-bold text-slate-600 dark:text-slate-300 block mb-1">Loan Amount ($):</label>
+          <input type="number" id="mortAmount" value="350000" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs font-semibold focus:outline-none focus:border-blue-500">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-600 dark:text-slate-300 block mb-1">Interest Rate (% APR):</label>
+          <input type="number" step="0.1" id="mortRate" value="6.5" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs font-semibold focus:outline-none focus:border-blue-500">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-600 dark:text-slate-300 block mb-1">Term (Years):</label>
+          <select id="mortYears" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs font-semibold focus:outline-none">
+            <option value="15">15 Years Fixed</option>
+            <option value="30" selected>30 Years Fixed</option>
+          </select>
+        </div>
+      </div>
+
+      <button onclick="calcMortgage()" class="bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 text-white font-bold py-3 px-8 rounded-xl text-xs transition shadow-md">
+        Calculate Monthly Payment 📊
+      </button>
+
+      <div id="mortResult" class="hidden bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 text-center space-y-2">
+        <div class="text-[10px] uppercase font-bold text-slate-400">Estimated Monthly Payment</div>
+        <div id="resMonthly" class="text-3xl font-black text-blue-600 dark:text-blue-400">$0</div>
+      </div>
+    </div>
+
+    <!-- TAB 2: INVESTING -->
+    <div id="contentInvest" class="hidden glass-card p-6 md:p-8 rounded-3xl space-y-6">
+      <div>
+        <h2 class="text-lg font-black mb-1">Compound Interest Simulator</h2>
+        <p class="text-xs text-slate-500 dark:text-slate-400">Project future portfolio growth based on regular contributions and annual returns.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="text-xs font-bold text-slate-600 dark:text-slate-300 block mb-1">Monthly Contribution ($):</label>
+          <input type="number" id="invMonthly" value="500" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs font-semibold focus:outline-none">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-600 dark:text-slate-300 block mb-1">Horizon (Years):</label>
+          <input type="number" id="invYears" value="20" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs font-semibold focus:outline-none">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-600 dark:text-slate-300 block mb-1">Est. Annual Return (%):</label>
+          <input type="number" step="0.1" id="invRate" value="8.0" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs font-semibold focus:outline-none">
+        </div>
+      </div>
+
+      <button onclick="calcInvest()" class="bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 text-white font-bold py-3 px-8 rounded-xl text-xs transition shadow-md">
+        Simulate Growth 🚀
+      </button>
+
+      <div id="investResult" class="hidden bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 text-center space-y-2">
+        <div class="text-[10px] uppercase font-bold text-slate-400">Future Portfolio Value</div>
+        <div id="resInvestTotal" class="text-3xl font-black text-emerald-600 dark:text-emerald-400">$0</div>
+      </div>
+    </div>
+
+    <!-- TAB 3: DEBT PAYOFF -->
+    <div id="contentDebt" class="hidden glass-card p-6 md:p-8 rounded-3xl space-y-6">
+      <div>
+        <h2 class="text-lg font-black mb-1">Debt Payoff & Acceleration Planner</h2>
+        <p class="text-xs text-slate-500 dark:text-slate-400">Estimate how quickly you can eliminate high-interest debt with extra payments.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="text-xs font-bold text-slate-600 dark:text-slate-300 block mb-1">Total Debt ($):</label>
+          <input type="number" id="debtBal" value="15000" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs font-semibold focus:outline-none">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-600 dark:text-slate-300 block mb-1">Average APR (%):</label>
+          <input type="number" step="0.1" id="debtRate" value="18.5" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs font-semibold focus:outline-none">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-600 dark:text-slate-300 block mb-1">Extra Monthly Pmt ($):</label>
+          <input type="number" id="debtExtra" value="200" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs font-semibold focus:outline-none">
+        </div>
+      </div>
+
+      <button onclick="calcDebt()" class="bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 text-white font-bold py-3 px-8 rounded-xl text-xs transition shadow-md">
+        Calculate Payoff Timeline ⏱️
+      </button>
+
+      <div id="debtResult" class="hidden bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 text-center space-y-2">
+        <div class="text-[10px] uppercase font-bold text-slate-400">Estimated Payoff Time</div>
+        <div id="resDebtMonths" class="text-3xl font-black text-purple-600 dark:text-purple-400">0 Months</div>
+      </div>
+    </div>
+
+    <!-- TAB 4: EMERGENCY FUND -->
+    <div id="contentEmergency" class="hidden glass-card p-6 md:p-8 rounded-3xl space-y-6">
+      <div>
+        <h2 class="text-lg font-black mb-1">Emergency Fund Target Calculator</h2>
+        <p class="text-xs text-slate-500 dark:text-slate-400">Determine recommended cash savings for essential living expenses.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="text-xs font-bold text-slate-600 dark:text-slate-300 block mb-1">Monthly Expenses ($):</label>
+          <input type="number" id="emerMonthly" value="4000" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs font-semibold focus:outline-none">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-600 dark:text-slate-300 block mb-1">Target Coverage:</label>
+          <select id="emerMonths" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs font-semibold focus:outline-none">
+            <option value="3">3 Months (Minimum)</option>
+            <option value="6" selected>6 Months (Recommended)</option>
+            <option value="12">12 Months (Conservative)</option>
+          </select>
+        </div>
+      </div>
+
+      <button onclick="calcEmergency()" class="bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 text-white font-bold py-3 px-8 rounded-xl text-xs transition shadow-md">
+        Calculate Emergency Target 🎯
+      </button>
+
+      <div id="emerResult" class="hidden bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 text-center space-y-2">
+        <div class="text-[10px] uppercase font-bold text-slate-400">Recommended Emergency Fund</div>
+        <div id="resEmerTotal" class="text-3xl font-black text-emerald-600 dark:text-emerald-400">$0</div>
+      </div>
+    </div>
+
+    <!-- SEO ARTICLE SECTION -->
+    <section class="glass-card p-8 rounded-3xl space-y-4">
+      <h2 class="text-xl font-black">Mastering Personal Finance & Wealth Building</h2>
+      <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
+        Effective money management requires clear projections and disciplined budgeting. Whether you are evaluating mortgage amortization schedules or mapping out debt elimination strategies, OmniFinance provides independent client-side tools designed for maximum security and privacy.
+      </p>
+    </section>
+
   </main>
 
-  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400">
-    © 2026 OmniFinance. All rights reserved. | <a href="privacy.html" class="underline">Privacy Policy</a>
+  <!-- FOOTER -->
+  <footer class="border-t border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 py-6 text-center text-xs text-slate-500 mt-12">
+    <p>© 2026 OmniFinance. Independent Educational Calculators. | <a href="privacy.html" class="underline">Privacy</a> • <a href="terms.html" class="underline">Terms</a> • <a href="contact.html" class="underline">Contact</a></p>
   </footer>
 
+  <!-- SCRIPT -->
   <script>
-    function calcLoan() {
-      const p = parseFloat(document.getElementById('loanAmt').value) || 0;
-      const r = (parseFloat(document.getElementById('loanRate').value) || 0) / 100 / 12;
-      const n = 30 * 12;
+    function toggleDarkMode() {
+      if (document.documentElement.classList.contains('dark')) {
+        document.documentElement.classList.remove('dark');
+        document.getElementById('themeIcon').innerText = '🌙';
+      } else {
+        document.documentElement.classList.add('dark');
+        document.getElementById('themeIcon').innerText = '☀️';
+      }
+    }
+
+    function switchTab(tab) {
+      const tabs = ['mortgage', 'invest', 'debt', 'emergency'];
+      tabs.forEach(t => {
+        const content = document.getElementById('content' + t.charAt(0).toUpperCase() + t.slice(1));
+        const btn = document.getElementById('btn' + t.charAt(0).toUpperCase() + t.slice(1));
+        if (t === tab) {
+          content.classList.remove('hidden');
+          btn.className = "px-4 py-2 rounded-xl text-xs font-bold transition bg-blue-600 text-white shadow-md";
+        } else {
+          content.classList.add('hidden');
+          btn.className = "px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-300";
+        }
+      });
+    }
+
+    function calcMortgage() {
+      const p = parseFloat(document.getElementById('mortAmount').value) || 0;
+      const r = (parseFloat(document.getElementById('mortRate').value) || 0) / 100 / 12;
+      const n = parseInt(document.getElementById('mortYears').value) * 12;
       const monthly = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
       document.getElementById('resMonthly').innerText = '$' + Math.round(monthly).toLocaleString();
-      document.getElementById('resultBox').classList.remove('hidden');
+      document.getElementById('mortResult').classList.remove('hidden');
+    }
+
+    function calcInvest() {
+      const pmt = parseFloat(document.getElementById('invMonthly').value) || 0;
+      const years = parseInt(document.getElementById('invYears').value) || 20;
+      const r = (parseFloat(document.getElementById('invRate').value) || 8) / 100 / 12;
+      const n = years * 12;
+      let futureVal = 0;
+      for (let i = 1; i <= n; i++) {
+        futureVal += pmt * Math.pow(1 + r, n - i);
+      }
+      document.getElementById('resInvestTotal').innerText = '$' + Math.round(futureVal).toLocaleString();
+      document.getElementById('investResult').classList.remove('hidden');
+    }
+
+    function calcDebt() {
+      const bal = parseFloat(document.getElementById('debtBal').value) || 0;
+      const apr = (parseFloat(document.getElementById('debtRate').value) || 18) / 100 / 12;
+      const extra = parseFloat(document.getElementById('debtExtra').value) || 0;
+      const totalPmt = Math.max(bal * 0.025, 25) + extra;
+      if (totalPmt <= bal * apr) {
+        document.getElementById('resDebtMonths').innerText = "Payment too low!";
+      } else {
+        const months = Math.ceil(Math.log(totalPmt / (totalPmt - bal * apr)) / Math.log(1 + apr));
+        document.getElementById('resDebtMonths').innerText = `${months} Months (${(months/12).toFixed(1)} Years)`;
+      }
+      document.getElementById('debtResult').classList.remove('hidden');
+    }
+
+    function calcEmergency() {
+      const monthly = parseFloat(document.getElementById('emerMonthly').value) || 0;
+      const months = parseInt(document.getElementById('emerMonths').value) || 6;
+      document.getElementById('resEmerTotal').innerText = '$' + Math.round(monthly * months).toLocaleString();
+      document.getElementById('emerResult').classList.remove('hidden');
     }
   </script>
 </body>
